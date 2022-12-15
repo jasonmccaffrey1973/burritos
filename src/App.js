@@ -1,25 +1,36 @@
-import logo from './logo.svg';
-import './App.css';
+import React, {useState, useEffect} from 'react'
+import Section from './components/Section'
+import { getSections } from './helperFunctions/getSectionItems'
+import './css/burrito.css'
+import BurritoStats from './components/BurritoStats'
 
-function App() {
+const App = () => {
+  const sections = getSections()
+
+  const [cost, setCost] = useState(0)
+  const [calories, setCalories] = useState(0)
+  const [selectedItems, setSelectedItems] = useState([])
+
+  useEffect(() => {
+    setCalories(selectedItems.reduce((total, item) => total + item.calories, 0))
+    setCost(selectedItems.reduce((total, item) => total + item.cost, 0))
+  }, [selectedItems])
+  
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div id="page">
+      <div className="main-container">
+        <header>
+          <h1 className="page-title">Build a Burrito</h1>
+          <BurritoStats cost={cost} calories={calories} />
+        </header>
+        <main>
+          {sections.map( section => <Section key={section.name} type={section.name} title={section.title} limit={section.limit} selectedItems={selectedItems} setSelectedItems={setSelectedItems} />)}
+        </main>
+      </div>
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
+
